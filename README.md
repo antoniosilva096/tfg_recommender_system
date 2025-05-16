@@ -77,7 +77,8 @@ tfg_ecommerce_clean/
 ├── .env.example         # Plantilla para variables de entorno
 ├── requirements.txt     # Dependencias del proyecto
 └── README.md
-
+```
+---
 
 ## 🚫 Nota importante
 
