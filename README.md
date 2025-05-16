@@ -111,27 +111,35 @@ python manage.py runserver
 python manage.py train_models
 ```
 
+---
 
-🧪 Metodología aplicada
-El desarrollo siguió una metodología híbrida (cascada + ágil), combinando:
+## 🧪 Metodología aplicada
 
-Fases bien definidas (análisis, diseño, implementación, pruebas)
+El desarrollo del proyecto siguió una **metodología híbrida** que combina lo mejor del enfoque tradicional en cascada con elementos ágiles como **Scrum** y **Kanban**, permitiendo una gestión eficaz y adaptable.
 
-Sprints gestionados mediante tableros Kanban
+### 🔧 Enfoque adoptado:
 
-Documentación técnica continua
+- 📌 Fases claramente definidas: *Análisis, diseño, implementación y pruebas*
+- 🗂️ Gestión por sprints con tableros **Kanban**
+- 📝 Documentación técnica continua y estructurada
+- ✅ Validación mediante **historias de usuario**, requisitos funcionales y trazabilidad
+- 📦 Proceso **ETL optimizado** para manejar +150.000 productos reales del dataset de Amazon
 
-Validación de requisitos mediante historias de usuario y trazabilidad
+Este enfoque permitió entregar una solución funcional, escalable y bien documentada, combinando buenas prácticas de ingeniería con flexibilidad en la ejecución.
 
-Procesos ETL optimizados para trabajar con más de 150.000 productos de Amazon
+---
 
+## 📚 Autor
 
-Antonio Silva Gordillo
-Trabajo dirigido por: Dr. Juan Antonio Ortega Ramírez
-📧 antoniosilva096@gmail.com
-🔗 LinkedIn
-🧪 Departamento: Lenguajes y Sistemas Informáticos – ETSII, Universidad de Sevilla
-📅 Convocatoria: Junio, curso 2024-2025
+**👨‍💻 Antonio Silva Gordillo**  
+Trabajo dirigido por: **Dr. Juan Antonio Ortega Ramírez**
+
+- 📧 [antoniosilva096@gmail.com](mailto:antoniosilva096@gmail.com)  
+- 🔗 [LinkedIn](https://www.linkedin.com/in/antoniosilva096/)  
+- 🏛️ Departamento de **Lenguajes y Sistemas Informáticos**, ETSII – Universidad de Sevilla  
+- 📅 Convocatoria: **Junio, curso 2024–2025**
+
+---
 
 
 inteligencia artificial · eCommerce · sistemas de recomendación · Django · Python · aprendizaje automático · personalización · data-driven development
