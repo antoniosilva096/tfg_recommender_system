@@ -54,14 +54,30 @@ Diseñar e implementar una plataforma web interactiva donde se puedan cargar pro
 
 ## 📁 Estructura del proyecto
 
-recommendations/ # Lógica de entrenamiento y predicción
-datasets/ # Datos estructurados y preprocesados
-core/ # Módulo principal Django (urls, views, lógica)
-templates/ # Plantillas HTML
-static/ # Archivos CSS, JS y recursos estáticos
+```text
+tfg_ecommerce_clean/
+├── recommendations/     # Lógica de entrenamiento y predicción
+│   ├── train_svd.py
+│   ├── train_knn.py
+│   └── ...
+├── datasets/            # Datos estructurados y preprocesados
+│   └── productos_amazon.csv
+├── core/                # Módulo principal de Django (vistas, urls, lógica)
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   └── ...
+├── templates/           # Plantillas HTML de la interfaz web
+│   └── base.html
+├── static/              # Archivos estáticos: CSS, JS, imágenes
+│   ├── css/
+│   ├── js/
+│   └── img/
+├── manage.py
+├── .env.example         # Plantilla para variables de entorno
+├── requirements.txt     # Dependencias del proyecto
+└── README.md
 
-
----
 
 ## 🚫 Nota importante
 
