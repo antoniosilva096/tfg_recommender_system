@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block body_attr %}
+class="d-flex flex-column min-vh-100"
+{% endblock %}
+
+{% block content %}
+<div class="flex-grow-1 d-flex justify-content-center align-items-center margin-top-custom">
+    <div id="login-card" class="card shadow-lg border-0 rounded-lg" style="width: 400px">
+        <div class="card-header text-center py-4" style="border-bottom: none;">
+            <h3 class="mb-0" style="font-weight: bold; color: #333;">Iniciar sesión</h3>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0" id="basic-addon1">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 shadow-sm" id="identifier" name="identifier" placeholder="Email ID" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0" id="basic-addon2">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" class="form-control border-0 shadow-sm" id="password" name="password" placeholder="Password" required>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-dark shadow-sm">Login</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center py-3" style="border-top: none; background-color: transparent;">
+            <a href="{% url 'password_reset' %}" class="text-muted" style="font-size: 0.9rem;">¿Has olvidado tu contraseña?</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginCard = document.getElementById("login-card");
+        const errorMessage = document.querySelector('.toast.bg-danger');
+
+        if (errorMessage && loginCard) {
+            // Aplica la clase de vibración al card
+            loginCard.classList.add('shake');
+            loginCard.addEventListener('animationend', () => {
+                loginCard.classList.remove('shake');
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,1 @@
+python manage.py load_products_from_csv --csv_path data/products_clean.csv 

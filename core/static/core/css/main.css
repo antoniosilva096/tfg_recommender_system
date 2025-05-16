@@ -1,0 +1,143 @@
+/* Asegurar que la página ocupe toda la altura */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Estructura principal para mantener el footer abajo */
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Hace que la página ocupe toda la pantalla */
+}
+
+/* Contenedor principal para que el contenido crezca */
+main {
+    flex-grow: 1;
+    background-image: url('../img/login-bg.png');
+    background-size: cover;
+    background-position: center;
+    padding-bottom: 50px; /* Evitar solapamiento con el footer */
+}
+
+/* Navbar */
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+    color: #fff;
+    border-bottom: 2px solid #fff;
+}
+
+/* Estilo para evitar cambio de color y borde en botones específicos */
+.navbar-nav .nav-link.no-focus {
+    border-bottom: none !important;
+}
+
+.navbar-nav .nav-link.no-focus:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Estilo del footer */
+footer {
+    background-color: #000000;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+}
+
+/* Fondo para autenticación */
+.authentication-bg {
+    background-image: url('../img/login-bg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Estilo para tarjetas con efecto de desenfoque */
+.card {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo semitransparente */
+}
+
+/* Margen superior personalizado */
+.margin-top-custom {
+    margin-top: 200px;
+}
+
+/* Loader para carga */
+#loader {
+    position: fixed; /* Se fija en la ventana */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8); /* Fondo translúcido opcional */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que el loader esté sobre todo */
+}
+
+/* Animación de sacudida */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+  
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Tablas con fondo semitransparente */
+.table-transparent-bg {
+    background-color: rgba(255, 255, 255, 0.588); 
+    border-radius: 8px; 
+    padding: 15px; 
+}
+
+.table-transparent-bg th,
+.table-transparent-bg td {
+    background-color: rgba(255, 255, 255, 0.325); /* Más opaco para encabezados y celdas */
+}
+
+/* Contenedor de DataTables con fondo blanco transparente */
+.dataTables-container {
+    background-color: rgba(255, 255, 255, 0.8); /* Blanco con 80% de opacidad */
+    border-radius: 8px; /* Opcional: esquinas redondeadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Opcional: sombra para profundidad */
+}
+
+/* Evita que DataTables agregue fondo */
+.dataTables-container .dataTables_wrapper {
+    background-color: transparent;
+}
+
+/* Ajustar colores de DataTables para mejor contraste */
+.dataTables-container .dataTables_filter input {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+/* Paginación en DataTables */
+.dataTables-container .dataTables_paginate .paginate_button {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.dataTables-container .dataTables_paginate .paginate_button.current {
+    background-color: #0d6efd; /* Color de Bootstrap para botones activos */
+    color: rgba(255, 255, 255, 0.8) !important;
+    border-color: #0d6efd;
+}
+
+.dataTables-container .dataTables_paginate .paginate_button:hover {
+    background-color: #0b5ed7;
+    color: white !important;
+    border-color: #0a58ca;
+}

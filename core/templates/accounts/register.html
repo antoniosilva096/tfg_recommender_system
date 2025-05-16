@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_attr %}
+class="authentication-bg position-relative"
+{% endblock %}
+
+{% block content %}
+<div class="position-absolute start-0 end-0 start-0 bottom-0 w-100 h-100">
+    <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 800 800'>
+        <g fill-opacity='0.22'>
+            <circle style="fill: rgba(var(--ct-primary-rgb), 0.1);" cx='400' cy='400' r='600'/>
+            <circle style="fill: rgba(var(--ct-primary-rgb), 0.2);" cx='400' cy='400' r='500'/>
+            <circle style="fill: rgba(var(--ct-primary-rgb), 0.3);" cx='400' cy='400' r='300'/>
+            <circle style="fill: rgba(var(--ct-primary-rgb), 0.4);" cx='400' cy='400' r='200'/>
+            <circle style="fill: rgba(var(--ct-primary-rgb), 0.5);" cx='400' cy='400' r='100'/>
+        </g>
+    </svg>
+</div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-secondary text-white text-center py-3">
+                    <span><img src="{% static 'logo/logo.png' %}" alt="logo" height="35"></span>
+                    <h3 class="mb-0">Crear Cuenta</h3>
+                </div>
+                <div class="card-body p-4">
+                    {% include 'messages.html' %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Introduce tu nombre" required>
+                                    <label for="first_name">Nombre</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Introduce tu apellido" required>
+                                    <label for="last_name">Apellido</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control" id="telephone" name="telephone" placeholder="Introduce tu teléfono" required>
+                            <label for="telephone">Teléfono</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Introduce tu correo electrónico" required>
+                            <label for="email">Correo Electrónico</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Introduce tu dirección" required>
+                            <label for="address">Dirección</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Introduce tu contraseña" required>
+                            <label for="password">Contraseña</label>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-secondary btn-lg">Registrarse</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">¿Ya tienes una cuenta? <a href="{% url 'login' %}" class="text-primary">Inicia sesión</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

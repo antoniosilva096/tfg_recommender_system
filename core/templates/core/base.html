@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TFG Sistema Recomendador{% endblock %}</title>
+
+    <!-- CSS de Bootstrap -->
+    <link rel="stylesheet" href="{% static 'core/vendor/bootstrap.min.css' %}">
+    <!-- CSS de DataTables (si se requiere en otro lugar) -->
+    <link rel="stylesheet" href="{% static 'core/vendor/jquery.dataTables.min.css' %}">
+    <!-- CSS de FontAwesome -->
+    <link rel="stylesheet" href="{% static 'core/vendor/assets/fontawesome/css/all.min.css' %}">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+
+    <link rel="icon" type="image/x-icon" href="{% static 'core/favicon.ico' %}">
+
+    <style>
+        /* Asegurar que el contenido se expanda y el footer esté siempre abajo */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .content {
+            flex-grow: 1;
+        }
+        footer {
+            background-color: #343a40; /* Color oscuro de Bootstrap */
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="fade-in">
+
+    <div class="wrapper">
+        <!-- Navbar -->
+        {% include 'core/navbar.html' %}
+
+        <!-- Contenedor Principal -->
+        <main class="content">
+            <div class="container mt-4">
+                <!-- Loader -->
+                {% include 'core/loader.html' %}
+                <!-- Mensajes de éxito/error -->
+                {% include 'core/messages.html' %}
+                
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <p class="mb-0">
+                    © 2025 Universidad de Sevilla. Proyecto Fin de Grado realizado por 
+                    <strong>Antonio Silva (antsilgor)</strong> - Departamento LSI.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JS de jQuery -->
+    <script src="{% static 'core/vendor/jquery.min.js' %}"></script>
+    <!-- JS de Bootstrap -->
+    <script src="{% static 'core/vendor/bootstrap.bundle.min.js' %}"></script>
+    <!-- JS de DataTables (si se usa) -->
+    <script src="{% static 'core/vendor/jquery.dataTables.min.js' %}"></script>
+    <!-- JS personalizado -->
+    <script src="{% static 'core/js/main.js' %}"></script>
+
+    {% block extra_js %}
+    <script>
+        // Al terminar de cargar la ventana, mostrar la animación de fade-in
+        $(window).on('load', function() {
+            document.body.classList.add('loaded');
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!-- recommendations/templates/recommendations/dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recomendation Playground</title>
+</head>
+<body>
+  <h1>Playground de Recomendación</h1>
+
+  <form method="POST">
+    {% csrf_token %}
+    <label for="user_id">Selecciona Usuario:</label>
+    <select name="user_id">
+      {% for u in users %}
+        <option value="{{ u.id }}"
+         {% if selected_user and selected_user.id == u.id %}
+            selected
+         {% endif %}
+         >{{ u.username }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="algorithm">Algoritmo:</label>
+    <select name="algorithm">
+      <option value="collaborative" {% if selected_algo == "collaborative" %} selected{% endif %}>Colaborativo</option>
+      <option value="matrix" {% if selected_algo == "matrix" %} selected{% endif %}>Matrix Factor</option>
+      <!-- Otros algoritmos -->
+    </select>
+
+    <button type="submit">Obtener Recomendaciones</button>
+  </form>
+
+  {% if recommendations %}
+    <h2>Recomendaciones:</h2>
+    <ul>
+      {% for product_id in recommendations %}
+        <li>Producto con ID: {{ product_id }}</li>
+        <!-- O podrías cargar el objeto y mostrar su title, price, etc. -->
+      {% endfor %}
+    </ul>
+  {% endif %}
+</body>
+</html>

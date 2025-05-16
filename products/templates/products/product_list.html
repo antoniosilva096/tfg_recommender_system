@@ -1,0 +1,315 @@
+{% extends 'core/base.html' %}
+{% load math_extras %}
+
+{% block title %}Listado de Productos | TFG{% endblock %}
+
+{% block content %}
+<style>
+  /* ============================
+     TARJETAS DE PRODUCTO
+     ============================ */
+  .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden; /* Evita que se “desborde” el contenido */
+  }
+  .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-img-top {
+      width: 100%;
+      height: 220px;
+      object-fit: contain; 
+      background-color: #f8f8f8; /* color de fondo para espacios vacíos */
+      padding: 10px;
+  }
+
+  /* ============================
+     Paginación
+     ============================ */
+  .pagination .page-item .page-link {
+      border-radius: 8px;
+      margin: 2px;
+      font-weight: 500;
+  }
+  .pagination .active .page-link {
+      background-color: #0d6efd; /* color de bootstrap para btn-primary */
+      border-color: #0d6efd;
+  }
+
+  /* ============================
+     FILTROS Y BUSCADOR
+     ============================ */
+  .advanced-filters-btn {
+      color: #fff;
+      background-color: #000; /* Botón negro */
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+    .advanced-filters-btn:hover,
+    .advanced-filters-btn:active,
+    .advanced-filters-btn:focus {
+      background-color: #ffc107; /* Amarillo */
+      color: #000; /* Texto negro al hacer hover */
+      text-decoration: none;
+    }
+
+  .advanced-filters {
+      display: none;
+      transition: max-height 0.5s ease;
+      overflow: hidden;
+  }
+  .advanced-filters.show {
+      display: block;
+  }
+
+</style>
+
+<!-- Sección principal con título -->
+<div class="bg-light text-center">
+    <div class="container py-4">
+        <h1 class="display-5 text-primary fw-bold mb-3">🌟 PRODUCTOS DISPONIBLES 🌟</h1>
+        <p class="lead text-muted mb-0">
+            Catálogo extraído del dataset:
+            <a href="https://huggingface.co/datasets/McAuley-Lab/Amazon-Reviews-2023" target="_blank">
+                McAuley-Lab/Amazon-Reviews-2023
+            </a>.
+        </p>
+    </div>
+</div>
+
+<!-- Contenido principal -->
+<div class="container py-5">
+
+    <!-- Buscador + Botón de filtros avanzados -->
+    <div class="row g-3 justify-content-center mb-3">
+        <div class="col-lg-10">
+            <form method="GET" action="">
+                <div class="row g-3 align-items-center">
+                    <!-- Buscador principal -->
+                    <div class="col-sm-6 col-md-4">
+                        <input 
+                            type="text" 
+                            name="search"
+                            class="form-control shadow-sm"
+                            placeholder="Buscar producto..."
+                            value="{{ current_search }}"
+                        >
+                    </div>
+                    
+                    <!-- Categoría -->
+                    <div class="col-sm-6 col-md-3">
+                        <select name="category" class="form-select shadow-sm">
+                            <option value="">Todas las Categorías</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.name }}" {% if current_category == cat.name %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Botón buscar -->
+                    <div class="col-sm-12 col-md-3">
+                        <button class="btn btn-primary w-100 shadow-sm" type="submit">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                    
+                    <!-- Botón para mostrar/ocultar filtros avanzados -->
+                    <div class="col-sm-12 col-md-2 text-end">
+                        <span class="advanced-filters-btn">
+                            Filtros avanzados <i class="fas fa-sliders-h"></i>
+                        </span>
+                    </div>
+                </div>
+                <!-- Filtros avanzados (colapsables) -->
+                <div class="advanced-filters bg-light rounded shadow-sm mt-3 px-4 py-3">
+                    <div class="d-flex flex-wrap align-items-end gap-3">
+                    
+                    <!-- Precio mínimo -->
+                    <div class="flex-fill" style="min-width: 150px;">
+                        <label class="form-label fw-bold text-secondary">Precio Mínimo</label>
+                        <input 
+                        type="number"
+                        name="price_min"
+                        class="form-control"
+                        placeholder="0"
+                        value="{{ current_price_min }}"
+                        >
+                    </div>
+                
+                    <!-- Precio máximo -->
+                    <div class="flex-fill" style="min-width: 150px;">
+                        <label class="form-label fw-bold text-secondary">Precio Máximo</label>
+                        <input 
+                        type="number"
+                        name="price_max"
+                        class="form-control"
+                        placeholder="9999"
+                        value="{{ current_price_max }}"
+                        >
+                    </div>
+                
+                    <!-- Calificación mínima -->
+                    <div class="flex-fill" style="min-width: 150px;">
+                        <label class="form-label fw-bold text-secondary">Calificación Mínima</label>
+                        <select name="rating_min" class="form-select">
+                        <option value="">Todas</option>
+                        {% for star in "12345" %}
+                            <option value="{{ star }}" {% if current_rating_min == star %}selected{% endif %}>
+                            {{ star }} ★
+                            </option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                
+                    <!-- Ordenar por -->
+                    <div class="flex-fill" style="min-width: 150px;">
+                        <label class="form-label fw-bold text-secondary">Ordenar por</label>
+                        <select name="sort_by" class="form-select">
+                        <option value="">Por defecto</option>
+                        <option value="price_asc" {% if current_sort_by == "price_asc" %}selected{% endif %}>Precio Ascendente</option>
+                        <option value="price_desc" {% if current_sort_by == "price_desc" %}selected{% endif %}>Precio Descendente</option>
+                        <option value="rating_desc" {% if current_sort_by == "rating_desc" %}selected{% endif %}>Mejor Calificación</option>
+                        </select>
+                    </div>
+                
+                    <!-- Botón para aplicar filtros avanzados -->
+                    <div class="ms-auto">
+                        <button class="btn btn-secondary" type="submit">
+                        <i class="fas fa-filter"></i> Aplicar Filtros
+                        </button>
+                    </div>
+                    </div>
+                </div>
+  
+            </form>
+        </div>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div class="row row-cols-1 row-cols-md-3 mt-5 g-4">
+        {% for product in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.title }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark">{{ product.title }}</h5>
+                        
+                        <p class="card-text text-muted mb-4">
+                            <strong>Categorías:</strong>
+                            {% for category in product.categories.all %}
+                                {{ category.name }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                No especificado
+                            {% endfor %}
+                            <br>
+                            <strong>Precio:</strong>
+                            <span class="text-success fw-bold">
+                                ${{ product.price }}
+                            </span>
+                            <br>
+                            {% if product.average_rating %}
+                                <strong>Rating:</strong>
+                                {% for i in "12345" %}
+                                    {% if i|to_float <= product.average_rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1 text-muted">
+                                    ({{ product.average_rating|floatformat:1 }})
+                                </span>
+                            {% else %}
+                                <small class="text-muted">Sin calificación</small>
+                            {% endif %}
+                        </p>
+                        
+                        <a href="#" class="mt-auto btn btn-outline-primary w-100">
+                            <i class="fas fa-info-circle"></i> Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <p class="text-muted fs-5">No se encontraron productos. 🧐</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación con elipsis -->
+    {% if is_paginated %}
+    <div class="container mt-4">
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link shadow-sm"
+                        href="?page={{ page_obj.previous_page_number }}&search={{ current_search }}&category={{ current_category }}&price_min={{ current_price_min }}&price_max={{ current_price_max }}&rating_min={{ current_rating_min }}&sort_by={{ current_sort_by }}"
+                        aria-label="Anterior">
+                            « Anterior
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for num in elided_page_range %}
+                    {% if num == '…' %}
+                        <li class="page-item disabled">
+                            <span class="page-link shadow-sm">…</span>
+                        </li>
+                    {% else %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link shadow-sm bg-primary border-primary">{{ num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link shadow-sm"
+                                href="?page={{ num }}&search={{ current_search }}&category={{ current_category }}&price_min={{ current_price_min }}&price_max={{ current_price_max }}&rating_min={{ current_rating_min }}&sort_by={{ current_sort_by }}">
+                                {{ num }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link shadow-sm"
+                        href="?page={{ page_obj.next_page_number }}&search={{ current_search }}&category={{ current_category }}&price_min={{ current_price_min }}&price_max={{ current_price_max }}&rating_min={{ current_rating_min }}&sort_by={{ current_sort_by }}"
+                        aria-label="Siguiente">
+                            Siguiente »
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Script para mostrar/ocultar la sección de Filtros Avanzados -->
+<script>
+  const advFiltersBtn = document.querySelector('.advanced-filters-btn');
+  const advFilters = document.querySelector('.advanced-filters');
+
+  if (advFiltersBtn && advFilters) {
+      advFiltersBtn.addEventListener('click', () => {
+          advFilters.classList.toggle('show');
+      });
+  }
+</script>
+{% endblock %}
