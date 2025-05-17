@@ -127,7 +127,7 @@ python manage.py load_products #Carga en la bbdd los productos desde el csv limp
 2️⃣ Importar reseñas y usuarios
 ```
 python manage.py filter_reviews #Procesa el dataset en bruto de reviews extraido del repositorio de hugging face para la categoria electronics
-python manage.py import_reviews --csv_path data/reviews_clean.csv #Carga y vincula a usuarios en la bbdd las reviews procesadas y limpias
+python manage.py load_amazon_reviews #Carga y vincula a usuarios en la bbdd las reviews procesadas y limpias
 
 ```
 
