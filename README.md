@@ -101,14 +101,12 @@ env\Scripts\activate
 # 3. Instala dependencias
 pip install -r requirements.txt
 
-# 4. Configura tu base de datos PostgreSQL y archivo .env
+# 4. Configura tu base de datos PostgreSQL en Settings
 
 # 5. Aplica migraciones y ejecuta
 python manage.py migrate
 python manage.py runserver
 
-# 6. Entrena modelos
-python manage.py train_models
 ```
 
 🧾 Cargar datos reales (productos, reseñas, usuarios)
@@ -120,25 +118,21 @@ cd data/
 
 py procesar_dataset_productos.py #Genera el CSV procesado de productos Aplicando un proceso ETL
 
-python manage.py load_products #CArga en la bbdd los productos desde el csv limpio generado en el paso anterior
+python manage.py load_products #Carga en la bbdd los productos desde el csv limpio generado en el paso anterior
 
 ```
 ⚠️ Solo se cargan productos válidos con título, precio, imagen y categorías.
 
-🪵 Logs en: logs/product_loader.log
 
 2️⃣ Importar reseñas y usuarios
 ```
-python manage.py filter_reviews 
-python manage.py import_reviews --csv_path data/reviews_clean.csv
+python manage.py filter_reviews #Procesa el dataset en bruto de reviews extraido del repositorio de hugging face para la categoria electronics
+python manage.py import_reviews --csv_path data/reviews_clean.csv #Carga y vincula a usuarios en la bbdd las reviews procesadas y limpias
 
 ```
 
 4️⃣ Limpiar para DEMO o Entrenamiento
 ```
-# Simulación sin borrar nada
-python manage.py clean_for_demo --dry-run
-
 # Limpieza real → mantiene solo 5000 productos con más calidad
 python manage.py clean_for_demo
 ```
