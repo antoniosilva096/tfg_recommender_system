@@ -115,11 +115,13 @@ python manage.py train_models
 
 1️⃣ Cargar productos
 ```
-# Desde HuggingFace (150k prductos de la categoria Electronics)
-python manage.py load_products
+# Desde HuggingFace (150k productos de la categoria Electronics)
+cd data/
 
-# Desde un CSV preprocesado personalizado
-python manage.py load_products --csv_path data/products_clean.csv
+py procesar_dataset_productos.py #Genera el CSV procesado de productos Aplicando un proceso ETL
+
+python manage.py load_products #CArga en la bbdd los productos desde el csv limpio generado en el paso anterior
+
 ```
 ⚠️ Solo se cargan productos válidos con título, precio, imagen y categorías.
 
@@ -127,13 +129,9 @@ python manage.py load_products --csv_path data/products_clean.csv
 
 2️⃣ Importar reseñas y usuarios
 ```
+python manage.py filter_reviews 
 python manage.py import_reviews --csv_path data/reviews_clean.csv
-python manage.py filter_reviews \
-  --input data/reviews_electronics.csv \
-  --output data/reviews_subset.csv \
-  --top_users 100000 \
-  --top_items 150000 \
-  --sample_size 100000
+
 ```
 
 4️⃣ Limpiar para DEMO o Entrenamiento
