@@ -89,7 +89,7 @@ Puedes generarlos localmente ejecutando los scripts de entrenamiento en `recomme
 
 ## ▶️ Instrucciones de uso
 
-```bash
+```
 # 1. Clona el repositorio
 git clone https://github.com/antoniosilva096/tfg_ecommerce_clean.git](https://github.com/antoniosilva096/tfg_recommender_system
 cd tfg_ecommerce_clean
@@ -111,7 +111,46 @@ python manage.py runserver
 python manage.py train_models
 ```
 
+🧾 Cargar datos reales (productos, reseñas, usuarios)
+
+1️⃣ Cargar productos
+```
+# Desde HuggingFace (150k prductos de la categoria Electronics)
+python manage.py load_products
+
+# Desde un CSV preprocesado personalizado
+python manage.py load_products --csv_path data/products_clean.csv
+```
+⚠️ Solo se cargan productos válidos con título, precio, imagen y categorías.
+
+🪵 Logs en: logs/product_loader.log
+
+2️⃣ Importar reseñas y usuarios
+```
+python manage.py import_reviews --csv_path data/reviews_clean.csv
+python manage.py filter_reviews \
+  --input data/reviews_electronics.csv \
+  --output data/reviews_subset.csv \
+  --top_users 100000 \
+  --top_items 150000 \
+  --sample_size 100000
+```
+
+4️⃣ Limpiar para DEMO o Entrenamiento
+```
+# Simulación sin borrar nada
+python manage.py clean_for_demo --dry-run
+
+# Limpieza real → mantiene solo 5000 productos con más calidad
+python manage.py clean_for_demo
+```
+💡 Filtra productos con imagen, categoría, +5 reviews, y buen rating
 ---
+
+📈 Entrenamiento de modelos
+```
+python manage.py train_models
+```
 
 ## 🧪 Metodología aplicada
 
