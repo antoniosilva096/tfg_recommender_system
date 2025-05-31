@@ -55,7 +55,7 @@ Diseñar e implementar una plataforma web interactiva donde se puedan cargar pro
 ## 📁 Estructura del proyecto
 
 ```text
-tfg_ecommerce_clean/
+tfg_recommender_system/
 ├── recommendations/     # Lógica de entrenamiento y predicción
 │   ├── train_svd.py
 │   ├── train_knn.py
