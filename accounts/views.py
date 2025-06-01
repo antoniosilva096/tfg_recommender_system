@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.shortcuts import render
 
 def register(request):
     if request.method == 'POST':
@@ -27,7 +28,7 @@ def register(request):
 
             account = Account(user=user)
             account.save()
-            # Enviar correo electrónico (opcional, desactivado por ahora)
+            # Enviar correo electrónico
             # send_mail(
             #         "Asunto aquí",
             #         "Aquí va el contenido del mensaje.",
@@ -92,3 +93,7 @@ def success(request):
 @login_required
 def perfil(request):
     return render(request, "accounts/perfil.html")
+
+def preview_gmail_email(request):
+    return render(request, 'email/correo.html')
+

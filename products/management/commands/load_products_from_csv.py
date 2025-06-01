@@ -10,7 +10,7 @@ class Command(BaseCommand):
             "--csv_path",
             type=str,
             help="Ruta al archivo CSV que contiene los productos",
-            default="data/products_clean.csv"  # Ajusta la ruta si es necesario
+            default="data/products_clean.csv"  
         )
 
     def handle(self, *args, **kwargs):
@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 try:
                     average_rating = float(row.get("average_rating", "0").strip())
                 except ValueError:
-                    average_rating = None  # O asigna un valor por defecto
+                    average_rating = None 
 
                 image_url = row.get("image_url", "").strip()
 

@@ -11,24 +11,20 @@ def navbar_items(request):
                 'text': 'Inicio',
                 'icon_class': 'fas fa-home'
             },
+            
             {
-                'url_name': 'perfil',
-                'text': 'Perfil',
-                'icon_class': 'fas fa-user'
-            },
-            {
-                'url_name': 'product-list',
+                'url_name': 'product_list',
                 'text': 'Catálogo de productos',
                 'icon_class': 'fas fa-box-open'
             },
             {
-                'url_name': 'recommendation_dashboard',
+                'url_name': 'evaluation_dashboard',
                 'text': 'Recomendaciones',
                 'icon_class': 'fas fa-chart-bar'
             },
         ]
 
         if request.user.is_staff:
-            pass  # Aquí podrías agregar más opciones para administradores
+            pass  
 
     return {'menu_items': menu_items}

@@ -1,8 +1,10 @@
+from datetime import timedelta
+import math
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from django.utils.timezone import now
 from recommendations.algorithms.content import content_based_recommendations
 from recommendations.algorithms.hybrid import hybrid_recommendations
 from recommendations.algorithms.knn import knn_recommendations
@@ -10,6 +12,17 @@ from .algorithms.collaborative import item_based_collaborative, recommend_simila
 from products.models import Product
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
+from django.db.models import Avg
+from django.shortcuts import render
+from datetime import datetime, timedelta
+from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from products.models import Product
+from recommendations.models import RecommendationEvaluation, Review
+from recommendations.algorithms.collaborative import recommend_similar_products
+from recommendations.algorithms.content import content_based_recommendations
+from recommendations.algorithms.knn import knn_recommendations
+from recommendations.algorithms.hybrid import hybrid_recommendations
 
 
 
@@ -26,57 +39,62 @@ def recommend_products(request, user_id):
         "recommended_products": recommended_pids
     })
 
-def recommendation_dashboard(request):
-    """
-    Vista tradicional con Django templates.
-    Permite seleccionar un usuario y un algoritmo
-    mediante un formulario POST, luego muestra en
-    la misma página los resultados (recomendaciones).
-    """
-    users = User.objects.all()
-    recommendations = []
-    selected_user = None
-    selected_algo = None
+def evaluation_dashboard(request):
+    now = datetime.now()
+    algorithms = [
+        ('collaborative', 'Filtrado Colaborativo'),
+        ('content', 'Content-Based'),
+        ('svd', 'SVD Matrix Factorization'),
+        ('knn', 'K-Nearest Neighbors'),
+        ('hybrid', 'Híbrido'),
+    ]
+    metrics = [
+        ('rmse', 'RMSE'),
+        ('mae', 'MAE'),
+        ('precision', 'Precision@K'),
+        ('recall', 'Recall@K'),
+        ('ctr', 'Click Through Rate'),
+        ('avg_cart_value', 'Valor Medio Carrito'),
+    ]
+    avg_values = [
+        {'algorithm': 'collaborative', 'avg': 1.08},
+        {'algorithm': 'content', 'avg': 0.97},
+        {'algorithm': 'svd', 'avg': 0.92},
+        {'algorithm': 'knn', 'avg': 0.89},
+        {'algorithm': 'hybrid', 'avg': 0.87},
+    ]
+    # Fake evolución temporal con oscilaciones
+    time_series = []
+    for i in range(29, -1, -1):
+        day = now - timedelta(days=i)
+        date_iso = day.strftime('%Y-%m-%dT%H:%M:%S')
+        for idx, (algo, _) in enumerate(algorithms):
+            # Un valor oscilante y distinto para cada algoritmo y cada día
+            value = round(
+                0.8 + 0.05 * idx + 0.12 * math.sin(i / 3.0 + idx) + 0.07 * math.cos(i / 5.0 + idx * 2),
+                3
+            )
+            time_series.append({
+                'timestamp': date_iso,
+                'algorithm': algo,
+                'value': value,
+            })
 
-    if request.method == "POST":
-        # Recuperar user_id y el algoritmo elegido desde el formulario
-        user_id = request.POST.get("user_id")
-        algo = request.POST.get("algorithm")
+    context = {
+        'algorithms': algorithms,
+        'metrics': metrics,
+        'selected_algorithms': [],
+        'selected_metric': '',
+        'days_range': 30,
+        'avg_values': avg_values,
+        'time_series': time_series,
+    }
+    return render(request, 'recommendations/dashboard.html', context)
 
-        selected_user = User.objects.filter(pk=user_id).first()
-        selected_algo = algo
 
-        if selected_user and selected_algo:
-            if selected_algo == "collaborative":
-                recommendations = item_based_collaborative(selected_user.id)
-            # Descomenta esto si tienes otro algoritmo:
-            # elif selected_algo == "matrix":
-            #     recommendations = matrix_factor_recommendations(selected_user.id)
-            # elif selected_algo == "hybrid":
-            #     recommendations = hybrid_recommendations(selected_user.id)
-            # ...
-
-    # Renderizar la plantilla con contexto
-    return render(
-        request,
-        "recommendations/dashboard.html",
-        {
-            "users": users,
-            "recommendations": recommendations,
-            "selected_user": selected_user,
-            "selected_algo": selected_algo,
-        },
-    )
     
     
-from django.shortcuts import render, get_object_or_404
-from django.contrib import messages
-from products.models import Product
-from recommendations.models import Review
-from recommendations.algorithms.collaborative import recommend_similar_products
-from recommendations.algorithms.content import content_based_recommendations
-from recommendations.algorithms.knn import knn_recommendations
-from recommendations.algorithms.hybrid import hybrid_recommendations
+
 
 def recommend_product_page(request, asin):
     product = get_object_or_404(Product, asin=asin)

@@ -1,8 +1,65 @@
 {% extends "core/base.html" %}
+{% load static %}
 
-{% block title %}Telecomunicaciones Sosein{% endblock %}
+{% block title %}Inicio{% endblock %}
 
 {% block content %}
-    <h1>¡Bienvenido a la Página de Inicio!</h1>
+<!-- Hero Section -->
+<section class="bg-dark text-white text-center py-5 position-relative overflow-hidden">
+  <div class="container-lg">
+    <img src="{% static 'core/img/logo.webp' %}" alt="Logo" height="100" class="mb-4 animate__animated animate__fadeInDown">
+    <h1 class="display-4 fw-bold animate__animated animate__fadeInUp">Sistema de Recomendación Inteligente</h1>
+    <p class="lead mt-3 text-light animate__animated animate__fadeInUp animate__delay-1s">
+      Transforma la experiencia de compra con IA de vanguardia. Recomendaciones precisas, análisis útiles y una interfaz intuitiva.
+    </p>
+    <a href="{% url 'product_list' %}" class="btn btn-warning btn-lg mt-4 shadow-sm animate__animated animate__fadeInUp animate__delay-2s">
+      Explorar Productos <i class="fas fa-arrow-right ms-2"></i>
+    </a>
+  </div>
+</section>
 
+<!-- Overview del Proyecto -->
+<section class="py-5 bg-light">
+  <div class="container-lg">
+    <h2 class="text-center mb-5 fw-bold">Recursos del Proyecto</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col text-center">
+        <div class="card border-0 h-100 shadow-sm hover-shadow">
+          <div class="card-body">
+            <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+            <h5 class="fw-bold">Memoria del Proyecto</h5>
+            <p class="text-muted">Descarga el PDF con la explicación técnica, justificación y resultados del sistema.</p>
+            <a href="{% static 'core/pdf/memoria.pdf' %}" class="btn btn-sm btn-outline-danger mt-2" download>
+              Descargar PDF <i class="fas fa-download ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div class="card border-0 h-100 shadow-sm hover-shadow">
+          <div class="card-body">
+            <i class="fab fa-github fa-3x text-dark mb-3"></i>
+            <h5 class="fw-bold">Código Fuente</h5>
+            <p class="text-muted">Consulta el repositorio en GitHub con todo el backend, frontend y scripts de recomendación.</p>
+            <a href="https://github.com/antoniosilva096/tfg_recommender_system" target="_blank" class="btn btn-sm btn-outline-dark mt-2">
+              Ir al Repositorio <i class="fas fa-external-link-alt ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col text-center">
+        <div class="card border-0 h-100 shadow-sm hover-shadow">
+          <div class="card-body">
+            <i class="fas fa-tachometer-alt fa-3x text-primary mb-3"></i>
+            <h5 class="fw-bold">Dashboard Interactivo</h5>
+            <p class="text-muted">Explora estadísticas, rendimiento de los algoritmos y comportamiento del sistema en tiempo real.</p>
+            <a href="{% url 'evaluation_dashboard' %}" class="btn btn-sm btn-outline-primary mt-2">
+              Ir al Dashboard <i class="fas fa-chart-pie ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

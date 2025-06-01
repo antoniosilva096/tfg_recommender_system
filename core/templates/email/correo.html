@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Restablecimiento de contraseña</title>
+    <style>
+        body {
+            background-color: #f6f6f6;
+            font-family: Roboto, Helvetica, Arial, sans-serif;
+            padding: 40px;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            height: 40px;
+        }
+        h2 {
+            color: #202124;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #3c4043;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 24px;
+            background-color: #1a73e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #5f6368;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="logo">
+            <img src="{% static 'core/img/logo.webp' %}" alt="Logo" height="200" class="me-2">
+        </div>
+        <h2>Restablecer tu contraseña</h2>
+        <p>Hola antsilgor,</p>
+        <p>Has solicitado restablecer tu contraseña. Haz clic en el botón de abajo para crear una nueva:</p>
+        <p style="text-align: center;">
+            <a href="http://127.0.0.1:8000/accounts/reset/MQ/cqmumq-a428adba9d81a7ccf6e77cf2f42ad2a8/" class="button">
+                Restablecer contraseña
+            </a>
+        </p>
+        <p>Si no has solicitado este cambio, puedes ignorar este correo con tranquilidad.</p>
+        <div class="footer">
+            Este mensaje fue enviado automáticamente por el sistema de soporte. No respondas a este correo.
+        </div>
+    </div>
+</body>
+</html>

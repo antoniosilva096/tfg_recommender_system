@@ -6,34 +6,46 @@
             <img src="{% static 'core/img/logo.webp' %}" alt="Logo" height="90" class="me-2">
         </a>
 
-        <!-- Botón para dispositivos móviles -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- Botón móvil -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Opciones de navegación -->
+        <!-- Contenido del navbar -->
         <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Opciones de navegación principales alineadas a la izquierda -->
+            <!-- Menú principal (izquierda) -->
             <ul class="navbar-nav me-auto">
                 {% for item in menu_items %}
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == item.url_name %}active{% endif %}" href="{% url item.url_name %}">
-                            <i class="{{ item.icon_class }} me-2"></i>{{ item.text }}
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == item.url_name %}active{% endif %}"
+                        href="{% url item.url_name %}">
+                        <i class="{{ item.icon_class }} me-2"></i>{{ item.text }}
+                    </a>
+                </li>
                 {% endfor %}
             </ul>
 
-            <!-- Opciones adicionales alineadas a la derecha -->
+            <!-- Menú de usuario (derecha) -->
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link text-danger no-focus" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'perfil' %}"><i class="fas fa-user me-2"></i>Ver perfil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión</a></li>
+                    </ul>
+                </li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link no-focus" href="{% url 'login' %}"><i class="fas fa-sign-in-alt me-1"></i>Iniciar sesión</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link no-focus" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt me-1"></i>Iniciar sesión
+                    </a>
+                </li>
                 {% endif %}
             </ul>
         </div>

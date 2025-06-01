@@ -14,7 +14,7 @@ class Command(BaseCommand):
             "--csv_path",
             type=str,
             help="Ruta al CSV con columnas user_id, asin, rating, review_text",
-            default="reviews_clean.csv"
+            default="data/reviews_subset.csv"
         )
 
     def handle(self, *args, **options):

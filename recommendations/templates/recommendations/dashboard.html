@@ -1,43 +1,219 @@
-<!-- recommendations/templates/recommendations/dashboard.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Recomendation Playground</title>
-</head>
-<body>
-  <h1>Playground de Recomendación</h1>
+{% extends 'core/base.html' %}
+{% load static %}
 
-  <form method="POST">
-    {% csrf_token %}
-    <label for="user_id">Selecciona Usuario:</label>
-    <select name="user_id">
-      {% for u in users %}
-        <option value="{{ u.id }}"
-         {% if selected_user and selected_user.id == u.id %}
-            selected
-         {% endif %}
-         >{{ u.username }}</option>
-      {% endfor %}
-    </select>
+{% block content %}
+<style>
+.dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #5eead4 0%, #38bdf8 100%);
+  padding-bottom: 3rem;
+}
+.card-dashboard {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 6px 24px rgba(50, 80, 100, 0.10);
+  padding: 2rem 2.5rem;
+  margin-bottom: 2.5rem;
+  transition: box-shadow 0.2s;
+}
+.card-dashboard:hover {
+  box-shadow: 0 12px 36px rgba(20, 90, 180, 0.13);
+}
+.metric-tooltip {
+  cursor: pointer;
+  color: #0ea5e9;
+  font-size: 1rem;
+}
+.legend-metric {
+  font-size: 0.95rem;
+  margin-left: 0.3em;
+  color: #3b82f6;
+  border-bottom: 1px dotted #3b82f6;
+  cursor: pointer;
+}
+</style>
+<div class="dashboard-bg py-5">
+  <div class="container">
+    <!-- Resumen explicativo -->
+    <div class="card-dashboard mb-4">
+      <div class="d-flex flex-wrap align-items-center mb-2">
+    
+        <div>
+          <h2 class="mb-0">📊 Evaluación de Algoritmos</h2>
+          <span class="text-muted fs-5">Monitoriza y compara el rendimiento de los sistemas de recomendación de tu eCommerce en tiempo real.</span>
+        </div>
+      </div>
+      <hr>
+      <ul>
+        <li><b>Filtra</b> por algoritmo, métrica o rango temporal.</li>
+        <li><b>Visualiza</b> el promedio y la evolución temporal de cada métrica.</li>
+        <li><b>Interpreta fácilmente</b> qué algoritmo tiene mejor rendimiento según la métrica seleccionada.</li>
+      </ul>
+    </div>
 
-    <label for="algorithm">Algoritmo:</label>
-    <select name="algorithm">
-      <option value="collaborative" {% if selected_algo == "collaborative" %} selected{% endif %}>Colaborativo</option>
-      <option value="matrix" {% if selected_algo == "matrix" %} selected{% endif %}>Matrix Factor</option>
-      <!-- Otros algoritmos -->
-    </select>
+    <!-- Filtros -->
+    <div class="card-dashboard">
+      <form method="get" class="row g-3 mb-1">
+        <div class="col-md-4">
+          <label class="form-label">Algoritmos</label>
+          <select class="form-select" name="algorithm" multiple>
+            {% for val, name in algorithms %}
+              <option value="{{ val }}" {% if val in selected_algorithms %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">
+            Métrica
+            <span class="legend-metric" title="¿Qué mide cada métrica?">ℹ️</span>
+          </label>
+          <select class="form-select" name="metric">
+            <option value="">-- Todas --</option>
+            {% for val, name in metrics %}
+              <option value="{{ val }}" {% if val == selected_metric %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Días</label>
+          <input type="number" name="days" class="form-control" value="{{ days_range }}">
+        </div>
+        <div class="col-md-2 align-self-end">
+          <button type="submit" class="btn btn-primary w-100">Actualizar</button>
+        </div>
+      </form>
+      <div class="small text-muted mt-1">
+        <b>Consejo:</b> Selecciona varias métricas o algoritmos para comparativa rápida.
+      </div>
+    </div>
 
-    <button type="submit">Obtener Recomendaciones</button>
-  </form>
+    <!-- Gráfica de barras: Promedio -->
+    <div class="card-dashboard">
+      <h5 class="mb-3">🔢 Promedios por Algoritmo</h5>
+      <canvas id="barChart" height="120"></canvas>
+    </div>
+    <!-- Gráfica de líneas: Evolución temporal -->
+    <div class="card-dashboard">
+      <h5 class="mb-3">📅 Evolución Temporal de la Métrica</h5>
+      <canvas id="lineChart" height="120"></canvas>
+    </div>
 
-  {% if recommendations %}
-    <h2>Recomendaciones:</h2>
-    <ul>
-      {% for product_id in recommendations %}
-        <li>Producto con ID: {{ product_id }}</li>
-        <!-- O podrías cargar el objeto y mostrar su title, price, etc. -->
-      {% endfor %}
-    </ul>
-  {% endif %}
-</body>
-</html>
+    <!-- Leyenda sobre las métricas -->
+    <div class="card-dashboard" style="background:#f0f9ff;">
+      <b>ℹ️ Guía rápida de métricas:</b>
+      <ul class="mb-0">
+        <li><b>RMSE/MAE</b>: Menor es mejor. Indican el error medio de predicción (calidad numérica).</li>
+        <li><b>Precision / Recall</b>: Mayor es mejor. Evalúan la calidad top-K de las recomendaciones.</li>
+        <li><b>CTR</b>: Porcentaje de clics sobre recomendaciones. Cuanto más alto, más “atractivo” el sistema.</li>
+        <li><b>Valor medio carrito</b>: Cuantifica el efecto de las recomendaciones en ventas.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+// Promedios por algoritmo (Bar)
+const barCtx = document.getElementById('barChart');
+const avgData = {{ avg_values|safe }};
+const labels = avgData.map(obj => obj.algorithm);
+const values = avgData.map(obj => obj.avg);
+
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Promedio',
+      data: values,
+      backgroundColor: 'rgba(37, 99, 235, 0.8)',
+      borderRadius: 10,
+      borderWidth: 0,
+      maxBarThickness: 48,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return ' ' + context.parsed.y.toFixed(3);
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: { color: '#e5e7eb' },
+        ticks: { color: '#555', font: {size: 15} }
+      },
+      x: { ticks: { color: '#2563eb', font: {weight: 'bold'} } }
+    }
+  }
+});
+
+// ---- GRÁFICA DE LÍNEAS HARDCODEADA ----
+const lineCtx = document.getElementById('lineChart');
+const algorithms = ['collaborative', 'content', 'svd', 'knn', 'hybrid'];
+const colors = [
+  "#2563eb","#06b6d4","#f59e42","#ec4899","#10b981"
+];
+const daysBack = 30;
+const now = new Date();
+const datasets = [];
+
+algorithms.forEach((alg, idx) => {
+  let data = [];
+  for(let i = 0; i < daysBack; i++) {
+    // Simulación: valores que varían con una onda para cada algoritmo y día
+    const date = new Date();
+    date.setDate(now.getDate() - (daysBack - 1 - i));
+    let base = 0.8 + idx * 0.05;
+    let value = base + 0.12 * Math.sin(i / 3 + idx) + 0.09 * Math.cos(i / 6 + idx * 1.5);
+    value = Math.round(value * 1000) / 1000;
+    data.push({x: date, y: value});
+  }
+  datasets.push({
+    label: alg,
+    data: data,
+    borderWidth: 3,
+    tension: 0.35,
+    borderColor: colors[idx % colors.length],
+    fill: false,
+    pointRadius: 2,
+  });
+});
+
+new Chart(lineCtx, {
+  type: 'line',
+  data: { datasets: datasets },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+    parsing: false,
+    scales: {
+      x: {
+        type: 'time',
+        time: { unit: 'day' },
+        grid: { color: '#e0e7ef' },
+        ticks: { color: '#555', font: {size: 13} }
+      },
+      y: {
+        beginAtZero: true,
+        grid: { color: '#e5e7eb' },
+        ticks: { color: '#555', font: {size: 15} }
+      }
+    }
+  }
+});
+</script>
+
+{% endblock %}
