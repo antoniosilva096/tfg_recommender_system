@@ -114,9 +114,8 @@ python manage.py runserver
 1️⃣ Cargar productos
 ```
 # Desde HuggingFace (150k productos de la categoria Electronics)
-cd data/
 
-py procesar_dataset_productos.py #Genera el CSV procesado de productos Aplicando un proceso ETL
+python3 data/preprocesar_dataset_productos.py #Genera el CSV procesado de productos Aplicando un proceso ETL
 
 python manage.py load_products #Carga en la bbdd los productos desde el csv limpio generado en el paso anterior
 
