@@ -8,3 +8,6 @@ env/
 venv/
 *.pkl
 *.code-workspace
+.venv/
+products_clean.csv
+

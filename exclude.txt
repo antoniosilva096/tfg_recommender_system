@@ -6,3 +6,6 @@ env\
 venv\
 .git\
 .gitignore
+.env
+.venv
+products_clean.csv
